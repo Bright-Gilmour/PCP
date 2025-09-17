@@ -1,0 +1,158 @@
+.relative{
+    position: absolute;
+}
+
+
+
+.relative img{
+    width: 70%;
+    height: 29vh;
+    z-index: 1000;
+    margin-top: 3%;
+    margin-left: 15%;
+}
+
+
+
+
+#height-1{
+    height: 70vh;
+    width: 100%;
+}
+
+
+
+
+#height-box{
+    height: 70vh;
+}
+
+
+
+
+
+#view-2{
+    background-color: #0EA5E9;
+    position: absolute;
+    width: 15%;
+    height: 5vh;
+    margin-top: 1%;
+    border-radius: 8px;
+    color: white;
+}
+
+
+
+
+
+
+#height-1:hover{
+    background: wheat;
+    box-shadow: 0 1px 4px rgba(67, 70, 74, 0.15);
+}
+
+
+
+
+
+
+
+/* ========================== PHONE SCREEN =========================== */
+
+
+@media all and (max-width: 767px) {
+    #height-1{
+        width: 110%;
+    }
+
+
+    #stars{
+        width: 7%;
+        position: absolute;
+        color: blue;
+    }
+
+
+    .p-4 h3{
+        font-size: 15px;
+        font-weight: bolder;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    #text-1{
+        font-size: 15px;
+        margin-top: 15%;
+        color: rgb(255, 67, 67);
+        font-weight: bolder;
+        cursor: pointer;
+    }
+
+
+    #text-2{
+        font-size: 18px;
+        margin-top: 1%;
+        color: black;
+        font-weight: bolder;
+        cursor: pointer;
+    }
+
+
+    #text-3{
+        font-size: 18px;
+        margin-top: 1%;
+        color: black;
+        font-weight: bolder;
+        cursor: pointer;
+    }
+
+
+    
+    #text-4{
+        font-size: 18px;
+        margin-top: 1%;
+        color: black;
+        font-weight: bolder;
+        cursor: pointer;
+    }
+
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /*===================SCROLLBAR=====================*/
+
+::-webkit-scrollbar{
+   width: 15px;
+}
+
+::-webkit-scrollbar-track{
+   background: #d1e5ff;
+}
+
+::-webkit-scrollbar-thumb{
+   background: linear-gradient(#32a500, #e3bd00);
+   border-radius: 15px;
+}
+
+

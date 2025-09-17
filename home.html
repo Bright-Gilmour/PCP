@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Price Comparison Platform</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="edit.css">
+<link rel="stylesheet" href="ttt.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+
+
+
+<script>
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+primary: '#0EA5E9',
+secondary: '#64748B'
+},
+borderRadius: {
+'none': '10px',
+'sm': '12px',
+DEFAULT: '8px',
+'md': '12px',
+'lg': '8px',
+'xl': '20px',
+'2xl': '24px',
+'3xl': '32px',
+'full': '9999px',
+'button': '8px'
+}
+}
+}
+}
+</script>
+
+
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+input[type="range"]::-webkit-slider-thumb {
+-webkit-appearance: none;
+appearance: none;
+width: 16px;
+height: 16px;
+background: #0EA5E9;
+border-radius: 50%;
+cursor: pointer;
+}
+.price-chart {
+width: 100%;
+height: 200px;
+}
+</style>
+
+</head>
+
+
+
+<body class="bg-gray-50 min-h-screen">
+<header class="fixed top-0 left-0 right-0 bg-white shadow-sm z-50">
+<div class="max-w-7xl mx-auto px-4">
+<div class="flex items-center justify-between h-16">
+
+<div class="flex items-center">
+<a href="#" class="text-2xl font-['Pacifico'] text-primary">PCP</a>
+</div>
+
+<div class="flex-1 max-w-2xl mx-8">
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<i class="ri-search-line text-gray-400"></i>
+</div>
+<input id="searchInput" type="text" class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:border-primary" placeholder="Search products...">
+
+</div>
+</div>
+
+
+<div class="flex items-center space-x-4">
+<button id="currency-btn" class="flex items-center space-x-1 text-gray-700 hover:text-primary">
+<i class="ri-creative-commons-nc-fill"></i>
+<span>Gh₵</span>
+</button>
+<button onclick="adminBtn()" class="px-6 py-1 text-primary border border-primary rounded-button hover:bg-primary/5">Admin</button>
+<button onclick="signBtn()" class="px-6 py-1 bg-primary text-white rounded-button hover:bg-primary/90">Sign Up</button>
+</div>
+
+</div>
+</div>
+</header>
+
+
+
+<main class="pt-20 pb-12">
+<div class="max-w-7xl mx-auto px-4">
+<div class="grid grid-cols-4 gap-6">
+<div style="box-shadow: 1px 1px 10px 1px rgb(195, 195, 195);" class="col-span-1 bg-white rounded-lg p-6 shadow-sm h-fit">
+<h3 class="font-semibold text-lg mb-4">Price Range</h3>
+<div class="space-y-6">
+
+
+<div>
+  
+ 
+
+   <!-- ------------------------------------------------------------ -->
+
+  <div>
+  <label class="block text-sm font-medium text-gray-700 mb-2">Enter Price</label>
+  <div class="space-y-2">
+    <input 
+      type="number" 
+      id="priceInput" 
+      placeholder="Enter minimum price like 7000" 
+      class="w-full h-10 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-300"
+    />
+    <div class="text-sm text-gray-600">
+      Showing products between: <span id="priceRangeText">--</span>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+  function updatePriceValue(val) {
+    document.getElementById('priceValue').innerText = '$' + val;
+  }
+</script>
+
+
+
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Categories</label>
+<div class="space-y-2">
+<label class="flex items-center space-x-2 cursor-pointer">
+<input type="checkbox" id="electronics-filter" class="rounded text-primary focus:ring-primary">
+<span class="text-sm">Electronics</span>
+</label>
+<label class="flex items-center space-x-2 cursor-pointer">
+<input type="checkbox" id="fashion-filter" class="rounded text-primary focus:ring-primary">
+<span class="text-sm">Fashion</span>
+</label>
+<label class="flex items-center space-x-2 cursor-pointer">
+<input type="checkbox" id="home-garden-filter" class="rounded text-primary focus:ring-primary">
+<span class="text-sm">Cars</span>
+</label>
+<label class="flex items-center space-x-2 cursor-pointer">
+<input type="checkbox" id="sports-filter" class="rounded text-primary focus:ring-primary">
+<span class="text-sm">Sports Wear</span>
+</label>
+</div>
+</div>
+
+
+
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Brands</label>
+<div class="space-y-2">
+<label class="flex items-center space-x-2 cursor-pointer">
+<input type="checkbox" class="rounded text-primary focus:ring-primary">
+<span class="text-sm">Apple</span>
+</label>
+<label class="flex items-center space-x-2 cursor-pointer">
+<input type="checkbox" class="rounded text-primary focus:ring-primary">
+<span class="text-sm">Samsung</span>
+</label>
+<label class="flex items-center space-x-2 cursor-pointer">
+<input type="checkbox" class="rounded text-primary focus:ring-primary">
+<span class="text-sm">Dell Laptop</span>
+</label>
+<label class="flex items-center space-x-2 cursor-pointer">
+<input type="checkbox" class="rounded text-primary focus:ring-primary">
+<span class="text-sm">HP Laptop</span>
+</label>
+<label class="flex items-center space-x-2 cursor-pointer">
+<input type="checkbox" class="rounded text-primary focus:ring-primary">
+<span class="text-sm">Toyota</span>
+</label>
+<label class="flex items-center space-x-2 cursor-pointer">
+<input type="checkbox" class="rounded text-primary focus:ring-primary">
+<span class="text-sm">Hundai</span>
+</label>
+<label class="flex items-center space-x-2 cursor-pointer">
+<input type="checkbox" class="rounded text-primary focus:ring-primary">
+<span class="text-sm">Benz</span>
+</label>
+</div>
+</div>
+
+
+
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Rating</label>
+<d id="stars" class="space-y-2">
+<label class="flex items-center space-x-2 cursor-pointer">
+<input type="radio" name="rating" class="text-primary focus:ring-primary">
+<div class="flex text-yellow-400">
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+</div>
+</label>
+<label class="flex items-center space-x-2 cursor-pointer">
+<input type="radio" name="rating" class="text-primary focus:ring-primary">
+<div class="flex text-yellow-400">
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-line"></i>
+</div>
+</label>
+<label class="flex items-center space-x-2 cursor-pointer">
+<input type="radio" name="rating" class="text-primary focus:ring-primary">
+<div class="flex text-yellow-400">
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-line"></i>
+<i class="ri-star-line"></i>
+</div>
+</label>
+</d>
+</div>
+</div>
+</div>
+
+
+
+<div class="col-span-3 space-y-6">
+<div class="bg-white rounded-lg p-4 shadow-sm">
+<div class="flex items-center justify-between">
+
+<div class="flex items-center space-x-4">
+
+
+<div class="flex items-center space-x-4">
+  <button data-category="all" class="filter-btn px-4 py-2 text-sm font-medium text-primary bg-primary/10 rounded-full hover:bg-primary/20">All</button>
+  <button data-category="phone" class="filter-btn px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-full hover:bg-gray-200">Phone</button>
+  <button data-category="laptop" class="filter-btn px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-full hover:bg-gray-200">Laptops</button>
+  <button data-category="watch" class="filter-btn px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-full hover:bg-gray-200">Watches</button>
+  <button data-category="shoe" class="filter-btn px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-full hover:bg-gray-200">Shoes</button>
+  <button data-category="tv" class="filter-btn px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-full hover:bg-gray-200">Television</button>
+  <button data-category="Bag" class="filter-btn px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-full hover:bg-gray-200">Bags</button>
+  <button data-category="Desktop" class="filter-btn px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-full hover:bg-gray-200">Desktop</button>
+</div>
+
+
+</div>
+
+
+
+<div class="flex items-center space-x-2">
+<button class="p-2 text-gray-600 hover:text-primary">
+
+</button>
+<button class="p-2 text-gray-600 hover:text-primary">
+
+</button>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+<!-- ================================================================ -->
+
+ 
+  
+  <section>
+              <div class="container">
+
+                  <div class="card">
+
+                    
+                      <div class="content">
+
+
+                        
+                <div style=" height: 45vh;" id="height-1" class="bg-white rounded-lg shadow-sm">
+      <div class="relative">
+      <img id="pic-1" style="width: 45%; height: 16vh;" src="pic/iipp22.png" alt="">
+      <button class="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:text-primary">
+      <i class="ri-heart-line"></i>
+      </button>
+      </div>
+      
+      <div class="p-4">
+      <h3 class="font-medium text-gray-900">iPhone 15 Pro Max</h3>
+      <div style="color: red;" id="stars" class="mt-2 flex items-center space-x-1 text-yellow-400 text-sm">
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-half-fill"></i>
+      <span class="text-gray-500"></span>
+      </div>
+      <div class="mt-3 space-y-2">
+      <div id="text-1" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()" class="text-gray-500">Queenster Ventures</span>
+      <span class="font-medium">GHc7500</span>
+      </div>
+      <div id="text-2" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()" class="text-gray-500">Benjamin Ventures</span>
+      <span class="font-medium">GHc7260</span>
+      </div>
+      <div id="text-3" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()" class="text-gray-500">Pius Ventures</span>
+      <span class="font-medium">GHc7410</span>
+      </div>
+      <div id="text-4" class="flex items-center justify-between text-sm">
+        <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()" class="text-gray-500">Bright Ventures</span>
+        <span class="font-medium">GHc7100</span>
+        </div>
+      </div>
+      
+      </div>
+      </div>
+                        
+                      </div>
+                     
+                  </div>
+
+
+                      <div class="card">
+
+                      <div class="content">
+
+
+                        
+                <div style=" height: 45vh;" id="height-1" class="bg-white rounded-lg shadow-sm">
+      <div class="relative">
+      <img id="pic-1" style="width: 45%; height: 16vh;" src="pic/bagg2.png" alt="">
+      <button class="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:text-primary">
+      <i class="ri-heart-line"></i>
+      </button>
+      </div>
+      
+      <div class="p-4">
+      <h3 class="font-medium text-gray-900">Classic Executive Bag</h3>
+      <div style="color: red;" id="stars" class="mt-2 flex items-center space-x-1 text-yellow-400 text-sm">
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-half-fill"></i>
+      <span class="text-gray-500"></span>
+      </div>
+      <div class="mt-3 space-y-2">
+      <div id="text-1" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Queenster Ventures</span>
+      <span class="font-medium">GHc720</span>
+      </div>
+      <div id="text-2" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Benjamin Ventures</span>
+      <span class="font-medium">GHc700</span>
+      </div>
+      <div id="text-3" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Pius Ventures</span>
+      <span class="font-medium">GHc690</span>
+      </div>
+      <div id="text-4" class="flex items-center justify-between text-sm">
+        <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Derrick Ventures</span>
+        <span class="font-medium">GHc740</span>
+        </div>
+      </div>
+      
+      </div>
+      </div>
+                        
+                      </div>
+                    
+                      </div>
+
+                  <div class="card">
+
+                      <div class="content">
+
+                                 
+                <div style=" height: 45vh;" id="height-1" class="bg-white rounded-lg shadow-sm">
+      <div class="relative">
+      <img id="pic-1" style="width: 45%; height: 16vh;" src="pic/ladies shirts11.png" alt="">
+      <button class="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:text-primary">
+      <i class="ri-heart-line"></i>
+      </button>
+      </div>
+      
+      <div class="p-4">
+      <h3 class="font-medium text-gray-900">Eleganza Women Dress</h3>
+      <div style="color: red;" id="stars" class="mt-2 flex items-center space-x-1 text-yellow-400 text-sm">
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-half-fill"></i>
+      <span class="text-gray-500"></span>
+      </div>
+      <div class="mt-3 space-y-2">
+      <div id="text-1" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Queenster Ventures</span>
+      <span class="font-medium">GHc580</span>
+      </div>
+      <div id="text-2" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Pius Ventures</span>
+      <span class="font-medium">GHc650</span>
+      </div>
+      <div id="text-3" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Derrick Ventures</span>
+      <span class="font-medium">GHc620</span>
+      </div>
+      <div id="text-4" class="flex items-center justify-between text-sm">
+        <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()" class="text-gray-500">Bright Ventures</span>
+        <span class="font-medium">GHc610</span>
+        </div>
+      </div>
+      
+      </div>
+      </div>
+
+ 
+                      </div>
+                    
+                  </div>
+
+
+
+                  <div class="card">
+
+                      <div class="content">
+                         
+                                 
+                <div style=" height: 45vh;" id="height-1" class="bg-white rounded-lg shadow-sm">
+      <div class="relative">
+      <img id="pic-1" style="width: 65%; height: 16vh;" src="pic/lapp1.png" alt="">
+      <button class="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:text-primary">
+      <i class="ri-heart-line"></i>
+      </button>
+      </div>
+      
+      <div class="p-4">
+      <h3 class="font-medium text-gray-900">HP EliteBook X360 Laptop</h3>
+      <div style="color: red;" id="stars" class="mt-2 flex items-center space-x-1 text-yellow-400 text-sm">
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-half-fill"></i>
+      <span class="text-gray-500"></span>
+      </div>
+      <div class="mt-3 space-y-2">
+      <div id="text-1" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Queenster Ventures</span>
+      <span class="font-medium">GHc4100</span>
+      </div>
+      <div id="text-2" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Benjamin Ventures</span>
+      <span class="font-medium">GHc3800</span>
+      </div>
+      <div id="text-3" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Derrick Ventures</span>
+      <span class="font-medium">GHc3970</span>
+      </div>
+      <div id="text-4" class="flex items-center justify-between text-sm">
+        <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Pius Ventures</span>
+        <span class="font-medium">GHc4050</span>
+        </div>
+      </div>
+      
+      </div>
+      </div>
+                         
+                      </div>
+                  
+                  </div>
+
+
+                    <div class="card">
+
+                      <div class="content">
+
+                                 
+                <div style=" height: 45vh;" id="height-1" class="bg-white rounded-lg shadow-sm">
+      <div class="relative">
+      <img id="pic-1" style="width: 45%; height: 16vh;" src="pic/shoe.png" alt="">
+      <button class="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:text-primary">
+      <i class="ri-heart-line"></i>
+      </button>
+      </div>
+      
+      <div class="p-4">
+      <h3 class="font-medium text-gray-900">Nike Infinity Sneaker</h3>
+      <div style="color: red;" id="stars" class="mt-2 flex items-center space-x-1 text-yellow-400 text-sm">
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-half-fill"></i>
+      <span class="text-gray-500"></span>
+      </div>
+      <div class="mt-3 space-y-2">
+      <div id="text-1" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Queenster Ventures</span>
+      <span class="font-medium">GHc500</span>
+      </div>
+      <div id="text-2" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Derrick Ventures</span>
+      <span class="font-medium">GHc470</span>
+      </div>
+      <div id="text-3" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Bright Ventures</span>
+      <span class="font-medium">GHc450</span>
+      </div>
+      <div id="text-4" class="flex items-center justify-between text-sm">
+        <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Benjamin Ventures</span>
+        <span class="font-medium">GHc490</span>
+        </div>
+      </div>
+      
+      </div>
+      </div>
+                       
+                      </div>
+                    
+                  </div>
+
+                  
+                    <div class="card">
+
+                      <div class="content">
+
+                                 
+                <div style=" height: 45vh;" id="height-1" class="bg-white rounded-lg shadow-sm">
+      <div class="relative">
+      <img id="pic-1" style="width: 45%; height: 16vh;" src="pic/iippp11.png" alt="">
+      <button class="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:text-primary">
+      <i class="ri-heart-line"></i>
+      </button>
+      </div>
+      
+      <div class="p-4">
+      <h3 class="font-medium text-gray-900">iPhone 15 Pro</h3>
+      <div style="color: red;" id="stars" class="mt-2 flex items-center space-x-1 text-yellow-400 text-sm">
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-half-fill"></i>
+      <span class="text-gray-500"></span>
+      </div>
+      <div class="mt-3 space-y-2">
+      <div id="text-1" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Queenster Ventures</span>
+      <span class="font-medium">GHc7000</span>
+      </div>
+      <div id="text-2" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Bright Ventures</span>
+      <span class="font-medium">GHc6700</span>
+      </div>
+      <div id="text-3" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Pius Ventures</span>
+      <span class="font-medium">GHc6900</span>
+      </div>
+      <div id="text-4" class="flex items-center justify-between text-sm">
+        <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Derrick</span>
+        <span class="font-medium">GHc6790</span>
+        </div>
+      </div>
+      
+      </div>
+      </div>
+                       
+                      </div>
+                    
+                  </div>
+
+
+                     
+                    <div class="card">
+
+                      <div class="content">
+
+                                 
+                <div style=" height: 45vh;" id="height-1" class="bg-white rounded-lg shadow-sm">
+      <div class="relative">
+      <img id="pic-1" style="width: 45%; height: 16vh;" src="pic/phone11.png" alt="">
+      <button class="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:text-primary">
+      <i class="ri-heart-line"></i>
+      </button>
+      </div>
+      
+      <div class="p-4">
+      <h3 class="font-medium text-gray-900">Huawei P30 Pro</h3>
+      <div style="color: red;" id="stars" class="mt-2 flex items-center space-x-1 text-yellow-400 text-sm">
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-half-fill"></i>
+      <span class="text-gray-500"></span>
+      </div>
+      <div class="mt-3 space-y-2">
+      <div id="text-1" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Amazon</span>
+      <span class="font-medium">GHc3500</span>
+      </div>
+      <div id="text-2" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Best Buy</span>
+      <span class="font-medium">GHc3800</span>
+      </div>
+      <div id="text-3" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Apple Store</span>
+      <span class="font-medium">GHc3300</span>
+      </div>
+      <div id="text-4" class="flex items-center justify-between text-sm">
+        <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Apple Store</span>
+        <span class="font-medium">GHc3850</span>
+        </div>
+      </div>
+      
+      </div>
+      </div>
+                       
+                      </div>
+                    
+                  </div>
+
+
+
+                     
+                    <div class="card">
+
+                      <div class="content">
+
+                                 
+                <div style=" height: 45vh;" id="height-1" class="bg-white rounded-lg shadow-sm">
+      <div class="relative">
+      <img id="pic-1" style="width: 45%; height: 16vh;" src="pic/ladies11.png" alt="">
+      <button class="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:text-primary">
+      <i class="ri-heart-line"></i>
+      </button>
+      </div>
+      
+      <div class="p-4">
+      <h3 class="font-medium text-gray-900">Quality Suit For Women</h3>
+      <div style="color: red;" id="stars" class="mt-2 flex items-center space-x-1 text-yellow-400 text-sm">
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-half-fill"></i>
+      <span class="text-gray-500"></span>
+      </div>
+      <div class="mt-3 space-y-2">
+      <div id="text-1" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Amazon</span>
+      <span class="font-medium">GHc550</span>
+      </div>
+      <div id="text-2" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Best Buy</span>
+      <span class="font-medium">GHc590</span>
+      </div>
+      <div id="text-3" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Apple Store</span>
+      <span class="font-medium">GHc580</span>
+      </div>
+      <div id="text-4" class="flex items-center justify-between text-sm">
+        <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Apple Store</span>
+        <span class="font-medium">GHc600</span>
+        </div>
+      </div>
+      
+      </div>
+      </div>
+                       
+                      </div>
+                    
+                  </div>
+
+
+               <div class="card">
+
+                      <div class="content">
+
+                                 
+                <div style=" height: 45vh;" id="height-1" class="bg-white rounded-lg shadow-sm">
+      <div class="relative">
+      <img id="pic-1" style="width: 50%; height: 16vh;" src="pic/shoe b.png" alt="">
+      <button class="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:text-primary">
+      <i class="ri-heart-line"></i>
+      </button>
+      </div>
+      
+      <div class="p-4">
+      <h3 class="font-medium text-gray-900">Nike Infinity Sneaker</h3>
+      <div style="color: red;" id="stars" class="mt-2 flex items-center space-x-1 text-yellow-400 text-sm">
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-half-fill"></i>
+      <span class="text-gray-500"></span>
+      </div>
+      <div class="mt-3 space-y-2">
+      <div id="text-1" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Amazon</span>
+      <span class="font-medium">GHc370</span>
+      </div>
+      <div id="text-2" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Best Buy</span>
+      <span class="font-medium">GHc450</span>
+      </div>
+      <div id="text-3" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Apple Store</span>
+      <span class="font-medium">GHc500</span>
+      </div>
+      <div id="text-4" class="flex items-center justify-between text-sm">
+        <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Apple Store</span>
+        <span class="font-medium">GHc420</span>
+        </div>
+      </div>
+      
+      </div>
+      </div>
+                       
+                      </div>
+                    
+                  </div>
+
+
+
+
+                   <div class="card">
+
+                      <div class="content">
+
+                                 
+                <div style=" height: 45vh;" id="height-1" class="bg-white rounded-lg shadow-sm">
+      <div class="relative">
+      <img id="pic-1" style="width: 80%; height: 15vh; margin-left: -1%;" src="pic/tvb.png" alt="">
+      <button class="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:text-primary">
+      <i class="ri-heart-line"></i>
+      </button>
+      </div>
+      
+      <div class="p-4">
+      <h3 class="font-medium text-gray-900">Samsung TV 55 Smart Uhd</h3>
+      <div style="color: red;" id="stars" class="mt-2 flex items-center space-x-1 text-yellow-400 text-sm">
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-half-fill"></i>
+      <span class="text-gray-500"></span>
+      </div>
+      <div class="mt-3 space-y-2">
+      <div id="text-1" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Amazon</span>
+      <span class="font-medium">GHc9100</span>
+      </div>
+      <div id="text-2" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Best Buy</span>
+      <span class="font-medium">GHc8590</span>
+      </div>
+      <div id="text-3" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Apple Store</span>
+      <span class="font-medium">GHc8880</span>
+      </div>
+      <div id="text-4" class="flex items-center justify-between text-sm">
+        <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Apple Store</span>
+        <span class="font-medium">GHc9200</span>
+        </div>
+      </div>
+      
+      </div>
+      </div>
+                       
+                      </div>
+                    
+                  </div>
+
+
+
+                   <div class="card">
+
+                      <div class="content">
+
+                                 
+                <div style=" height: 45vh;" id="height-1" class="bg-white rounded-lg shadow-sm">
+      <div class="relative">
+      <img id="pic-1" style="width: 55%; height: 17vh;" src="pic/tvc.png" alt="">
+      <button class="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:text-primary">
+      <i class="ri-heart-line"></i>
+      </button>
+      </div>
+      
+      <div class="p-4">
+      <h3 class="font-medium text-gray-900">Synix Icast Tv 55 inc</h3>
+      <div style="color: red;" id="stars" class="mt-2 flex items-center space-x-1 text-yellow-400 text-sm">
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-half-fill"></i>
+      <span class="text-gray-500"></span>
+      </div>
+      <div class="mt-3 space-y-2">
+      <div id="text-1" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Amazon</span>
+      <span class="font-medium">GHc7950</span>
+      </div>
+      <div id="text-2" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Best Buy</span>
+      <span class="font-medium">GHc8290</span>
+      </div>
+      <div id="text-3" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Apple Store</span>
+      <span class="font-medium">GHc8180</span>
+      </div>
+      <div id="text-4" class="flex items-center justify-between text-sm">
+        <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Apple Store</span>
+        <span class="font-medium">GHc8050</span>
+        </div>
+      </div>
+      
+      </div>
+      </div>
+                       
+                      </div>
+                    
+                  </div>
+
+
+
+
+
+
+                   <div class="card">
+
+                      <div class="content">
+
+                                 
+                <div style=" height: 45vh;" id="height-1" class="bg-white rounded-lg shadow-sm">
+      <div class="relative">
+      <img id="pic-1" style="width: 45%; height: 16vh;" src="pic/ladies shoe.png" alt="">
+      <button class="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:text-primary">
+      <i class="ri-heart-line"></i>
+      </button>
+      </div>
+      
+      <div class="p-4">
+      <h3 class="font-medium text-gray-900">Ladies Comfortable Shoes</h3>
+      <div style="color: red;" id="stars" class="mt-2 flex items-center space-x-1 text-yellow-400 text-sm">
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-half-fill"></i>
+      <span class="text-gray-500"></span>
+      </div>
+      <div class="mt-3 space-y-2">
+      <div id="text-1" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Amazon</span>
+      <span class="font-medium">GHc270</span>
+      </div>
+      <div id="text-2" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Best Buy</span>
+      <span class="font-medium">GHc290</span>
+      </div>
+      <div id="text-3" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Apple Store</span>
+      <span class="font-medium">GHc280</span>
+      </div>
+      <div id="text-4" class="flex items-center justify-between text-sm">
+        <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Apple Store</span>
+        <span class="font-medium">GHc300</span>
+        </div>
+      </div>
+      
+      </div>
+      </div>
+                       
+                      </div>
+                    
+                  </div>
+
+
+
+
+                   <div class="card">
+
+                      <div class="content">
+
+                                 
+                <div style=" height: 45vh;" id="height-1" class="bg-white rounded-lg shadow-sm">
+      <div class="relative">
+      <img id="pic-1" style="width: 75%; height: 16vh;" src="pic/lap22.png" alt="">
+      <button class="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:text-primary">
+      <i class="ri-heart-line"></i>
+      </button>
+      </div>
+      
+      <div class="p-4">
+      <h3 class="font-medium text-gray-900">Laptop HP Pavilion i7</h3>
+      <div style="color: red;" id="stars" class="mt-2 flex items-center space-x-1 text-yellow-400 text-sm">
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-half-fill"></i>
+      <span class="text-gray-500"></span>
+      </div>
+      <div class="mt-3 space-y-2">
+      <div id="text-1" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Amazon</span>
+      <span class="font-medium">GHc5890</span>
+      </div>
+      <div id="text-2" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Best Buy</span>
+      <span class="font-medium">GHc5990</span>
+      </div>
+      <div id="text-3" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Apple Store</span>
+      <span class="font-medium">GHc6180</span>
+      </div>
+      <div id="text-4" class="flex items-center justify-between text-sm">
+        <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Apple Store</span>
+        <span class="font-medium">GHc6000</span>
+        </div>
+      </div>
+      
+      </div>
+      </div>
+                       
+                      </div>
+                    
+                  </div>
+
+
+
+
+
+
+                   <div class="card">
+
+                      <div class="content">
+
+                                 
+                <div style=" height: 45vh;" id="height-1" class="bg-white rounded-lg shadow-sm">
+      <div class="relative">
+      <img id="pic-1" style="width: 45%; height: 16vh;" src="pic/watches.png" alt="">
+      <button class="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:text-primary">
+      <i class="ri-heart-line"></i>
+      </button>
+      </div>
+      
+      <div class="p-4">
+      <h3 class="font-medium text-gray-900">Ultra Smart Watches</h3>
+      <div style="color: red;" id="stars" class="mt-2 flex items-center space-x-1 text-yellow-400 text-sm">
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-half-fill"></i>
+      <span class="text-gray-500"></span>
+      </div>
+      <div class="mt-3 space-y-2">
+      <div id="text-1" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Amazon</span>
+      <span class="font-medium">GHc340</span>
+      </div>
+      <div id="text-2" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Best Buy</span>
+      <span class="font-medium">GHc320</span>
+      </div>
+      <div id="text-3" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Apple Store</span>
+      <span class="font-medium">GHc299</span>
+      </div>
+      <div id="text-4" class="flex items-center justify-between text-sm">
+        <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Apple Store</span>
+        <span class="font-medium">GHc300</span>
+        </div>
+      </div>
+      
+      </div>
+      </div>
+                       
+                      </div>
+                    
+                  </div>
+
+
+
+
+
+
+                   <div class="card">
+
+                      <div class="content">
+
+                                 
+                <div style=" height: 45vh;" id="height-1" class="bg-white rounded-lg shadow-sm">
+      <div class="relative">
+      <img id="pic-1" style="width: 65%; height: 16vh;" src="pic/systems.png" alt="">
+      <button class="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:text-primary">
+      <i class="ri-heart-line"></i>
+      </button>
+      </div>
+      
+      <div class="p-4">
+      <h3 class="font-medium text-gray-900">New Desktop Computer HP i7</h3>
+      <div style="color: red;" id="stars" class="mt-2 flex items-center space-x-1 text-yellow-400 text-sm">
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-half-fill"></i>
+      <span class="text-gray-500"></span>
+      </div>
+      <div class="mt-3 space-y-2">
+      <div id="text-1" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Amazon</span>
+      <span class="font-medium">GHc9950</span>
+      </div>
+      <div id="text-2" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Best Buy</span>
+      <span class="font-medium">GHc9890</span>
+      </div>
+      <div id="text-3" class="flex items-center justify-between text-sm">
+      <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Apple Store</span>
+      <span class="font-medium">GHc9795</span>
+      </div>
+      <div id="text-4" class="flex items-center justify-between text-sm">
+        <span style="cursor: pointer; color: rgb(255, 0, 0);" onclick="buyPhone()"  class="text-gray-500">Apple Store</span>
+        <span class="font-medium">GHc9900</span>
+        </div>
+      </div>
+      
+      </div>
+      </div>
+                       
+                      </div>
+                    
+                  </div>
+
+
+
+
+              </div>
+          </section>
+
+
+
+</div>
+</div>
+</div>
+</main>
+
+
+
+          <section style="width: 100%; height: 100vh; background: rgb(0, 0, 0, 0.3); position: fixed; top: 50%;left: 50%;transform: translate(-50%, -50%); z-index: 1000; display: none;" id="cover">
+           <span onclick="backGo()">
+             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10.5859 12L2.79297 4.20706L4.20718 2.79285L12.0001 10.5857L19.793 2.79285L21.2072 4.20706L13.4143 12L21.2072 19.7928L19.793 21.2071L12.0001 13.4142L4.20718 21.2071L2.79297 19.7928L10.5859 12Z"></path></svg>
+           </span>
+
+           <form action="">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(9,163,238,1)"><path d="M10 11V8L15 12L10 16V13H1V11H10ZM2.4578 15H4.58152C5.76829 17.9318 8.64262 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C8.64262 4 5.76829 6.06817 4.58152 9H2.4578C3.73207 4.94289 7.52236 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C7.52236 22 3.73207 19.0571 2.4578 15Z"></path></svg>
+            <h3>Please you have to login before</h3>
+            <button>
+               <a href="login.html">Login Here</a>
+            </button>
+           </form>
+
+          </section>   
+
+<footer class="bg-white border-t">
+<div class="max-w-7xl mx-auto px-4 py-12">
+<div class="grid grid-cols-4 gap-8">
+<div>
+<!--  
+</div>
+<div>
+<h4 class="font-semibold text-gray-900 mb-4">Support</h4>
+<ul class="space-y-2 text-sm text-gray-600">
+<li><a href="#" class="hover:text-primary">Help Center</a></li>
+<li><a href="#" class="hover:text-primary">Privacy Policy</a></li>
+<li><a href="#" class="hover:text-primary">Terms of Service</a></li>
+<li><a href="#" class="hover:text-primary">FAQ</a></li>
+</ul>
+</div>
+<div>
+
+<h4 class="font-semibold text-gray-900 mb-4">Partners</h4>
+<ul class="space-y-2 text-sm text-gray-600">
+<li><a href="#" class="hover:text-primary">Become a Partner</a></li>
+<li><a href="#" class="hover:text-primary"></a></li>
+<li><a href="#" class="hover:text-primary"></a></li>
+<li><a href="#" class="hover:text-primary"></a></li>
+</ul>
+</div>
+<div style="margin-left: -35%;">
+<h4 class="font-semibold text-gray-900 mb-4">Connect</h4>
+<div class="flex space-x-4 text-gray-600">
+<a href="#" class="hover:text-primary">
+<i class="ri-facebook-fill ri-xl"></i>
+</a>
+<a href="#" class="hover:text-primary">
+<i class="ri-twitter-fill ri-xl"></i>
+</a>
+<a href="#" class="hover:text-primary">
+<i class="ri-instagram-fill ri-xl"></i>
+</a>
+<a href="#" class="hover:text-primary">
+<i class="ri-linkedin-fill ri-xl"></i>
+</a>
+</div>
+-->
+<div class="mt-6">
+</div>
+</div>
+</div>
+
+<div class="mt-12 pt-8 border-t text-center text-sm text-gray-600">
+<p style="color: black;">&copy; 2025 Price Comparison Platform. All rights reserved.</p>
+</div>
+</div>
+</footer>
+
+
+
+<script src="code.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+const mockProductData = {
+  
+  
+  homeGarden: [
+    {
+      id: 4,
+      name: "Smart Garden Indoor Herb Kit",
+      image: "https://public.readdy.ai/ai/img_res/54a24c8550d5047e7f8652d00fdc7479.jpg",
+      rating: 4.5,
+      reviews: 156,
+      prices: {
+        Amazon: 199,
+        "Home Depot": 229,
+        "Wayfair": 219
+      },
+      priceHistory: [199, 229, 199, 189, 199, 199]
+    },
+    {
+      id: 5,
+      name: "Robot Vacuum Cleaner Pro",
+      image: "https://public.readdy.ai/ai/img_res/bdfd205c8211326b90b98b92739d4128.jpg",
+      rating: 4.8,
+      reviews: 234,
+      prices: {
+        Amazon: 599,
+        "Best Buy": 649,
+        "Target": 629
+      },
+      priceHistory: [599, 649, 599, 579, 599, 599]
+    },
+    {
+      id: 6,
+      name: "Smart Air Purifier Plus",
+      image: "https://public.readdy.ai/ai/img_res/cbf29c9f5678fcaf5bea9c7a7f8c1bbc.jpg",
+      rating: 4.6,
+      reviews: 178,
+      prices: {
+        Amazon: 299,
+        "Best Buy": 329,
+        "Home Depot": 319
+      },
+      priceHistory: [299, 329, 299, 279, 299, 299]
+    }
+  ]
+};
+
+
+
+
+
+
+
+
+
+
+const mockPriceData = {
+  dates: ['2024-10', '2024-11', '2024-12', '2025-01', '2025-02', '2025-03']
+};
+function createPriceChart(elementId, dataIndex) {
+const chart = echarts.init(document.getElementById(elementId));
+const option = {
+animation: false,
+grid: {
+top: 20,
+right: 20,
+bottom: 20,
+left: 40
+},
+xAxis: {
+type: 'category',
+data: mockPriceData.dates,
+axisLine: {
+lineStyle: {
+color: '#E5E7EB'
+}
+},
+axisLabel: {
+color: '#6B7280',
+fontSize: 10
+}
+},
+yAxis: {
+type: 'value',
+axisLine: {
+lineStyle: {
+color: '#E5E7EB'
+}
+},
+axisLabel: {
+color: '#6B7280',
+fontSize: 10
+},
+splitLine: {
+lineStyle: {
+color: '#F3F4F6'
+}
+}
+},
+series: [{
+data: mockPriceData.prices[dataIndex],
+type: 'line',
+smooth: true,
+symbol: 'none',
+lineStyle: {
+color: '#0EA5E9'
+},
+areaStyle: {
+color: {
+type: 'linear',
+x: 0,
+y: 0,
+x2: 0,
+y2: 1,
+colorStops: [{
+offset: 0,
+color: 'rgba(14, 165, 233, 0.2)'
+}, {
+offset: 1,
+color: 'rgba(14, 165, 233, 0)'
+}]
+}
+}
+}],
+tooltip: {
+trigger: 'axis',
+backgroundColor: 'rgba(255, 255, 255, 0.9)',
+borderColor: '#E5E7EB',
+textStyle: {
+color: '#1F2937'
+},
+formatter: function(params) {
+return `$${params[0].value}`;
+}
+}
+};
+chart.setOption(option);
+}
+document.addEventListener('DOMContentLoaded', function() {
+function renderProductCard(product) {
+  return `
+    <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+      <div class="relative">
+        <img src="${product.image}" class="w-full h-48 object-cover">
+        <button class="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:text-primary">
+          <i class="ri-heart-line"></i>
+        </button>
+      </div>
+      <div class="p-4">
+        <h3 class="font-medium text-gray-900">${product.name}</h3>
+        <div class="mt-2 flex items-center space-x-1 text-yellow-400 text-sm">
+          ${Array(Math.floor(product.rating)).fill('<i class="ri-star-fill"></i>').join('')}
+          ${product.rating % 1 ? '<i class="ri-star-half-fill"></i>' : ''}
+          ${Array(5 - Math.ceil(product.rating)).fill('<i class="ri-star-line"></i>').join('')}
+          <span class="text-gray-500">(${product.reviews})</span>
+        </div>
+        <div class="mt-3 space-y-2">
+          ${Object.entries(product.prices).map(([store, price]) => `
+            <div class="flex items-center justify-between text-sm">
+              <span class="text-gray-500">${store}</span>
+              <span class="font-medium">$${price}</span>
+            </div>
+          `).join('')}
+        </div>
+        <div class="mt-4">
+          <div id="price-chart-${product.id}" class="price-chart"></div>
+        </div>
+        <button class="mt-4 w-full bg-primary text-white py-2 rounded-button hover:bg-primary/90">View Details</button>
+      </div>
+    </div>
+  `;
+}
+
+function updateProductGrid(category) {
+  const productGrid = document.querySelector('.grid.grid-cols-3');
+  const products = mockProductData[category];
+  
+  productGrid.innerHTML = products.map(product => renderProductCard(product)).join('');
+  
+  products.forEach(product => {
+    createPriceChart(`price-chart-${product.id}`, product.priceHistory);
+  });
+}
+
+function createPriceChart(elementId, priceData) {
+  const chart = echarts.init(document.getElementById(elementId));
+  const option = {
+    animation: false,
+    grid: {
+      top: 20,
+      right: 20,
+      bottom: 20,
+      left: 40
+    },
+    xAxis: {
+      type: 'category',
+      data: mockPriceData.dates,
+      axisLine: {
+        lineStyle: {
+          color: '#E5E7EB'
+        }
+      },
+      axisLabel: {
+        color: '#6B7280',
+        fontSize: 10
+      }
+    },
+    yAxis: {
+      type: 'value',
+      axisLine: {
+        lineStyle: {
+          color: '#E5E7EB'
+        }
+      },
+      axisLabel: {
+        color: '#6B7280',
+        fontSize: 10
+      },
+      splitLine: {
+        lineStyle: {
+          color: '#F3F4F6'
+        }
+      }
+    },
+    series: [{
+      data: priceData,
+      type: 'line',
+      smooth: true,
+      symbol: 'none',
+      lineStyle: {
+        color: '#0EA5E9'
+      },
+      areaStyle: {
+        color: {
+          type: 'linear',
+          x: 0,
+          y: 0,
+          x2: 0,
+          y2: 1,
+          colorStops: [{
+            offset: 0,
+            color: 'rgba(14, 165, 233, 0.2)'
+          }, {
+            offset: 1,
+            color: 'rgba(14, 165, 233, 0)'
+          }]
+        }
+      }
+    }],
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: 'rgba(255, 255, 255, 0.9)',
+      borderColor: '#E5E7EB',
+      textStyle: {
+        color: '#1F2937'
+      },
+      formatter: function(params) {
+        return `$${params[0].value}`;
+      }
+    }
+  };
+  chart.setOption(option);
+}
+
+// Initial render
+updateProductGrid('electronics');
+
+// Add event listeners for category filters
+document.getElementById('home-garden-filter').addEventListener('change', function(e) {
+  if (e.target.checked) {
+    // Uncheck other categories
+    document.getElementById('electronics-filter').checked = false;
+    document.getElementById('fashion-filter').checked = false;
+    document.getElementById('sports-filter').checked = false;
+    updateProductGrid('homeGarden');
+  } else if (!document.querySelector('input[type="checkbox"]:checked')) {
+    // If no category is selected, show electronics by default
+    document.getElementById('electronics-filter').checked = true;
+    updateProductGrid('electronics');
+  }
+});
+
+document.getElementById('electronics-filter').addEventListener('change', function(e) {
+  if (e.target.checked) {
+    // Uncheck other categories
+    document.getElementById('home-garden-filter').checked = false;
+    document.getElementById('fashion-filter').checked = false;
+    document.getElementById('sports-filter').checked = false;
+    updateProductGrid('electronics');
+  } else if (!document.querySelector('input[type="checkbox"]:checked')) {
+    // If no category is selected, show electronics by default
+    e.target.checked = true;
+  }
+});
+
+// Set electronics as default checked
+document.getElementById('electronics-filter').checked = true;
+const currencyBtn = document.getElementById('currency-btn');
+const loginBtn = document.getElementById('login-btn');
+const signupBtn = document.getElementById('signup-btn');
+const loginModal = document.getElementById('login-modal');
+const signupModal = document.getElementById('signup-modal');
+const loginForm = document.getElementById('login-form');
+const signupForm = document.getElementById('signup-form');
+function showModal(modal) {
+modal.classList.remove('hidden');
+document.body.style.overflow = 'hidden';
+}
+function hideModal(modal) {
+modal.classList.add('hidden');
+document.body.style.overflow = '';
+}
+loginBtn.addEventListener('click', () => showModal(loginModal));
+signupBtn.addEventListener('click', () => showModal(signupModal));
+document.querySelectorAll('.close-modal').forEach(btn => {
+btn.addEventListener('click', () => {
+hideModal(loginModal);
+hideModal(signupModal);
+});
+});
+[loginModal, signupModal].forEach(modal => {
+modal.addEventListener('click', (e) => {
+if (e.target === modal) {
+hideModal(modal);
+}
+});
+});
+loginForm.addEventListener('submit', (e) => {
+e.preventDefault();
+const email = loginForm.querySelector('input[type="email"]').value;
+const password = loginForm.querySelector('input[type="password"]').value;
+// Here you would typically make an API call to authenticate
+console.log('Login attempt:', { email, password });
+hideModal(loginModal);
+// Show success message
+const successMsg = document.createElement('div');
+successMsg.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg';
+successMsg.textContent = 'Login successful!';
+document.body.appendChild(successMsg);
+setTimeout(() => successMsg.remove(), 3000);
+});
+signupForm.addEventListener('submit', (e) => {
+e.preventDefault();
+const formData = {
+firstName: signupForm.querySelector('input[placeholder="First name"]').value,
+lastName: signupForm.querySelector('input[placeholder="Last name"]').value,
+email: signupForm.querySelector('input[type="email"]').value,
+password: signupForm.querySelector('input[placeholder="Create a password"]').value,
+confirmPassword: signupForm.querySelector('input[placeholder="Confirm your password"]').value
+};
+// Here you would typically make an API call to register
+console.log('Signup attempt:', formData);
+hideModal(signupModal);
+// Show success message and redirect
+const successMsg = document.createElement('div');
+successMsg.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg';
+successMsg.textContent = 'Account created successfully!';
+document.body.appendChild(successMsg);
+setTimeout(() => {
+successMsg.remove();
+window.location.href = '/user-home.html';
+}, 1000);
+});
+[currencyBtn, notificationsBtn, cartBtn, profileBtn].forEach(btn => {
+btn.addEventListener('click', function() {
+const dropdown = document.createElement('div');
+dropdown.className = 'absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50';
+dropdown.innerHTML = `
+<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Option 1</a>
+<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Option 2</a>
+<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Option 3</a>
+`;
+const existingDropdown = document.querySelector('.absolute.top-full');
+if (existingDropdown) {
+existingDropdown.remove();
+} else {
+this.parentElement.appendChild(dropdown);
+}
+});
+});
+document.addEventListener('click', function(e) {
+if (!e.target.closest('button')) {
+const dropdown = document.querySelector('.absolute.top-full');
+if (dropdown) {
+dropdown.remove();
+}
+}
+});
+});
+</script>
+<script src="code.js"></script>
+</body>
+
+
+
+<script>
+  const priceInput = document.getElementById("priceInput");
+  const priceRangeText = document.getElementById("priceRangeText");
+
+  priceInput.addEventListener("input", function () {
+    const minPrice = parseInt(this.value);
+
+    // If input is not a number or empty, show all products
+    if (isNaN(minPrice)) {
+      document.querySelectorAll(".card").forEach(card => card.style.display = "block");
+      priceRangeText.innerText = "--";
+      return;
+    }
+
+    const maxPrice = minPrice + 999;
+    priceRangeText.innerText = `GHc${minPrice} - GHc${maxPrice}`;
+
+    const cards = document.querySelectorAll(".card");
+
+    cards.forEach(card => {
+      let showCard = false;
+
+      const priceElements = card.querySelectorAll(".font-medium");
+
+      priceElements.forEach(priceEl => {
+        const priceText = priceEl.textContent.replace(/[^\d]/g, '');
+        const price = parseInt(priceText);
+
+        if (price >= minPrice && price <= maxPrice) {
+          showCard = true;
+        }
+      });
+
+      card.style.display = showCard ? "block" : "none";
+    });
+  });
+</script>
+
+<script>
+  document.querySelectorAll('.filter-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      const category = button.getAttribute('data-category').toLowerCase();
+      const cards = document.querySelectorAll('.card');
+
+      cards.forEach(card => {
+        const title = card.querySelector('h3')?.textContent.toLowerCase();
+
+        if (category === "all") {
+          card.style.display = "block";
+        } else if (title && title.includes(category)) {
+          card.style.display = "block";
+        } else {
+          card.style.display = "none";
+        }
+      });
+
+      // Update button styles
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove("text-primary", "bg-primary/10");
+        btn.classList.add("text-gray-700", "bg-gray-100");
+      });
+      button.classList.add("text-primary", "bg-primary/10");
+      button.classList.remove("text-gray-700", "bg-gray-100");
+    });
+  });
+</script>
+
+
+
+
+
+<script>
+  const searchInput = document.getElementById('searchInput');
+  const cards = document.querySelectorAll('.card');
+
+  // Create or select the message element
+  let message = document.createElement('div');
+  message.id = 'no-result';
+  message.className = 'text-center text-red-500 mt-4';
+  message.textContent = "We don't have it yet";
+  message.style.display = 'none';
+  document.querySelector('.container').appendChild(message);
+
+  searchInput.addEventListener('input', function () {
+    const searchValue = this.value.toLowerCase().trim();
+    let hasMatch = false;
+
+    cards.forEach(card => {
+      const title = card.querySelector('h3')?.textContent.toLowerCase();
+      if (title.includes(searchValue)) {
+        card.style.display = "block";
+        hasMatch = true;
+      } else {
+        card.style.display = "none";
+      }
+    });
+
+    message.style.display = hasMatch || searchValue === "" ? 'none' : 'block';
+  });
+</script>
+
+
+</html>

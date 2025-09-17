@@ -1,0 +1,484 @@
+*{
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    text-decoration: none;
+}
+
+
+
+
+
+.admin-setting{
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  background:
+  url(https://i.ibb.co/Qjt7TJn/milad-fakurian-E8-Ufcyxz514-unsplash-1.jpg)
+  center / cover no-repeat fixed;
+}
+
+.admin-setting h2{
+  position: absolute;
+  margin-left: 42%;
+  margin-top: 1%;
+}
+
+#form-admin{
+  width: 40%;
+  height: 85vh;
+  background: rgb(255, 255, 255, 0.7);
+  position: absolute;
+  top: -32%;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  border-radius: 10px;
+  box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, 0.404);
+}
+
+
+
+#form-admin label{
+  margin-left: 10%;
+  margin-top: 4%;
+  position: absolute;
+  font-weight: bolder;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+
+#form-admin input{
+  height: 6vh;
+  width: 80%;
+  margin-left: 8%;
+  border-radius: 20px;
+  margin-top: 5%;
+  background: transparent;
+  padding-left: 2%;
+  padding-right: 2%;
+  border: none;
+  outline: 1px solid blue;
+}
+
+
+#form-admin input:hover{
+  box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, 0.404);
+  border: blue;
+}
+
+
+#form-admin img{
+  margin-left:10%;
+}
+
+
+
+#form-admin button{
+  height: 6vh;
+  width: 50%;
+  margin-left:10%;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background: #2989ff;
+  color: honeydew;
+}
+
+
+
+.admin-dashb{
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    background-color: whitesmoke;
+}
+
+
+
+
+
+
+
+
+
+
+.left-box3{
+    width: 16%;
+    height: 100vh;
+    background-color: #0D1117;
+    position: fixed;
+    top: 50%;
+    left: 8%;
+    transform: translate(-50%, -50%);
+    box-shadow: 1px 1px 10px 1px rgb(209, 207, 207);
+
+
+
+          /* PHONE SCREEN */
+    @media (max-width: 767px) {
+		    background: transparent;
+        width: 26%;
+	}
+}
+
+
+.left-box3 h3{
+  color: white;
+  position: absolute;
+  margin-left: 19%;
+  margin-top: 5%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+
+
+
+
+
+#picture-form2{
+    width: 100%;
+    height: 15vh;
+    background-color: #00ff62;
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  
+  #picture-form2 img{
+    position: absolute;
+    width: 25%;
+    margin-left: 38%;
+    margin-top: 5%;
+  }
+  
+  
+  #picture-form2 h5{
+    position: absolute;
+    margin-top: 25%;
+    margin-left: 12%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  
+
+
+
+
+
+
+.box-inside3{
+    width: 100%;
+    height: 40vh;
+    background-color: #0D1117;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
+
+
+.input9 {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    background-color: #0D1117;
+    justify-content: center;
+    border-radius: 5px
+}
+  
+#value9 {
+    background-color: transparent;
+    border: none;
+    padding: 10px;
+    color: white;
+    display: flex;
+    position: relative;
+    gap: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bolder;
+}
+  
+  #value9:not(:active):hover,
+  #value9:focus {
+    background-color: #2989ff;
+}
+  
+#value9:focus,
+  #value9:active {
+    background-color: #1A1F24;
+    outline: none;
+}
+  
+#value9::before {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: -10px;
+    width: 5px;
+    height: 80%;
+    background-color: #2F81F7;
+    border-radius: 5px;
+    opacity: 0;
+}
+  
+#value9:focus::before,
+  #value9:active::before {
+    opacity: 1;
+}
+  
+#value9 svg {
+    width: 20px
+}
+  
+.value9:hover > :not(#value9:hover) {
+    transition: 300ms;
+    filter: blur(1px);
+    transform: scale(0.95,0.95);
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  .vendor-top2{
+    width: 78%;
+    height: 50vh;
+    background-color: transparent;
+    position: absolute;
+    top: 73%;
+    left: 57.9%;
+    transform: translate(-50%, -50%);
+    border-radius: 9px;
+}
+
+
+
+.cardse2 {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+}
+
+.cardse2 .rede2 {
+  background-color: #007e9e;
+}
+
+.cardse2 .bluee2 {
+  background-color: #ff8c00;
+}
+
+.cardse2 .greene2 {
+  background-color: #0b1a64;
+}
+
+.cardse2 .carde2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  height: 40vh;
+  width: 40%;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  transition: 400ms;
+}
+
+.cardse2 .carde2 p.tipe2 {
+  font-size: 1.5em;
+  font-weight: 700;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.cardse2 .carde2 p.second-texte2 {
+  font-size: .7em;
+}
+
+.cardse2 .carde2:hover {
+  transform: scale(1.2, 1.2);
+}
+
+.cardse2:hover > .carde2:not(:hover) {
+  filter: blur(10px);
+  transform: scale(0.9, 0.9);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.layout-admin {
+  width: 78%;
+  height: 55vh;
+  position: absolute;
+  top: 68%;
+  left: 57.9%;
+  transform: translate(-50%, -50%);
+  border-radius: 9px;
+  display: flex;
+  gap: 18px;
+}
+
+.grow-admin { 
+  flex-grow: 1;
+  background: red;
+  width: 50%;
+
+ }
+
+
+
+ .grow-admin1 { 
+  flex-grow: 1;
+  background: rgb(97, 50, 50);
+ }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ /* ============================================== */
+
+ .welcome-box{
+  width: 78%;
+  height: 30vh;
+  background: transparent;
+  position: absolute;
+  top: 25%;
+  left: 58%;
+  transform: translate(-50%, -50%);
+  border-radius: 10px;
+ }
+
+
+
+
+ /* ================================= */
+
+ html {
+  height:60%;
+}
+
+
+.bg {
+  animation:slide 3s ease-in-out infinite alternate;
+  background-image: linear-gradient(-60deg, #0b1a64 50%, #007e9e 50%);
+  bottom:0;
+  left:16.5%;
+  opacity:.5;
+  position:fixed;
+  right:-50%;
+  top:0;
+  z-index:-1;
+  width: 67%;
+
+}
+
+.bg2 {
+  animation-direction:alternate-reverse;
+  animation-duration:4s;
+}
+
+.bg3 {
+  animation-duration:5s;
+}
+
+.content {
+  background-color:rgba(255,255,255,.8);
+  border-radius:.25em;
+  box-shadow:0 0 .25em rgba(0,0,0,.25);
+  box-sizing:border-box;
+  left:50%;
+  padding:10vmin;
+  position:fixed;
+  text-align:center;
+  top:50%;
+  transform:translate(-50%, -50%);
+}
+
+h1 {
+  font-family:monospace;
+  font-size: 30px;
+}
+
+@keyframes slide {
+  0% {
+    transform:translateX(-25%);
+  }
+  100% {
+    transform:translateX(25%);
+  }
+}
